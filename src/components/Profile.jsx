@@ -1,38 +1,25 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { fetchRestaurant } from '../actions';
 import { AddFood } from './AddFood';
 
 class Profile extends Component {
 
     constructor(props) {
         super(props);
-        
-        this.state = {
-            restaurantList: []
-        }
-
-        console.log(this.props)
-        this.isRestaurant = this.props.userType === "restaurant"
-
+        this.isRestaurant = this.props.main.userType === "restaurant"
     }
 
-
-
     componentDidMount = async () => {
-
-        const restaurants = await fetch('http://localhost:8000/rest/listRestaurant')
-        const parsedResp = await restaurants.json()
-        this.setState({
-            restaurantList: parsedResp.data
-        })
-
+        this.props.dispatch(fetchRestaurant())
     }
 
     render() {
         return (
             <>
-                <div>  Hi {this.props.user.username} </div>
+                <div>  Hi {this.props.main.user.username} </div>
                 {!this.isRestaurant && <ul>
-                    { this.state.restaurantList.map(res => <li> {res.name}  </li> )  }
+                    { this.props.main.restaurants.map(res => <li> {res.name}  </li> )  }
                 </ul>}
                 {
                     this.isRestaurant && <AddFood/>
@@ -43,4 +30,7 @@ class Profile extends Component {
     }
 }
 
-export default Profile;
+const mapStateToProps = (state) => {
+    return { main: state }
+}
+export default  connect(mapStateToProps)(Profile);

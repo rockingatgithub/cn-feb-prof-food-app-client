@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Cookies from 'js-cookie';
 import Profile from './Profile';
+import { submitHandler } from '../actions';
+import { connect } from 'react-redux';
 
 class UserForm extends Component {
 
@@ -31,7 +33,6 @@ class UserForm extends Component {
     }
 
     submitHandler = async (event) => {
-
         event.preventDefault()
         const { username, password, name, userType } =  this.state
         const { type } =  this.props
@@ -39,25 +40,7 @@ class UserForm extends Component {
             username: username,
             password: password
         }
-
-        let userText = userType === 'Customer' ? 'cust' : 'rest'
-
-        if(userText === 'rest'){
-            user.name = name
-        }
-
-        let res = await fetch(`http://localhost:8000/${userText}/${type}`, {
-            method: 'POST',
-            body: JSON.stringify(user),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-
-        let parsedRes = await res.json()
-        console.log("The user", parsedRes)
-        Cookies.set('user', parsedRes.token)
-        this.props.loginHandler(parsedRes.data, parsedRes.userType)
+        this.props.dispatch(submitHandler(userType, user, type, name))
     }
 
     userTypeHandler = (event) => {
@@ -78,7 +61,6 @@ class UserForm extends Component {
     
 
     render() {
-
         const { username, password, userType, name } =  this.state
 
         return (
@@ -99,4 +81,8 @@ class UserForm extends Component {
     }
 }
 
-export default UserForm;
+const mapStateToProps = (state) => {
+    return { main: state }
+}
+
+export default connect(mapStateToProps)(UserForm);

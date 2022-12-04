@@ -3,50 +3,30 @@ import { connect } from 'react-redux';
 import { setCounter } from '../actions';
 import Profile from './Profile';
 import UserForm from './UserForm';
+import {io} from 'socket.io-client'
+
+const socket = io('http://localhost:8000')
 
 class App extends Component {
 
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      user: {},
-      isLoggedIn: false,
-      userType: 'customer',
-    }
-
-    console.log("the store ", this.props.main)
-  }
-
-
-  loginHandler = (user, userType) => {
-
-    this.setState({
-      user: user,
-      isLoggedIn: true,
-      userType: userType,
+  componentDidMount = () => {
+    socket.on('hello', (msg) => {
+      console.log(msg)
     })
-
-  }
-
-  setCounterHandler = () => {
-
-    this.props.dispatch(setCounter())
+    socket.emit('hello-server', 'client connected!')
   }
   
 
   render() {
 
-    const {user, isLoggedIn, userType} = this.state
+    const {user, isLoggedIn, userType} = this.props.main
 
+    console.log("this props", this.props.main)
     return (
       <div>
         <h1>Food Ordering App 🧇</h1>
-        {isLoggedIn ? <Profile user={user} userType={userType} /> : <div><UserForm type="signin" loginHandler={this.loginHandler} />
-        <UserForm type="signup" loginHandler={this.loginHandler} /> </div>}
-
-        <div> Counter:- {this.props.main.counter} </div>
-        <button onClick={this.setCounterHandler}  > setCounter </button>
+        {isLoggedIn ? <Profile /> : <div><UserForm type="signin" />
+        <UserForm type="signup" /> </div>}
 
       </div>
     );
