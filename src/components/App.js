@@ -25,19 +25,19 @@ class App extends Component {
     return (
       <BrowserRouter>
       <div>
-        {/* <h1>Food Ordering App 🧇</h1>
+        <h1>Food Ordering App 🧇</h1>
         {isLoggedIn ? <Profile /> : <div><UserForm type="signin" />
-        <UserForm type="signup" /> </div>} */}
+        <UserForm type="signup" /> </div>}
 
-        <Routes>
+        {/* <Routes>
           <Route path='/signup' element={<UserForm type="signup" />} />
           <Route path='/signin' element={<UserForm type="signin" />} />
           <Route path='/profile' element={<Profile />} />
-        </Routes>
+        </Routes> */}
 
-        <Link to='/signup'> Signup </Link>
+        {/* <Link to='/signup'> Signup </Link>
         <Link to='/signin'> Signin </Link>
-        <Link to='/profile'> profile </Link>
+        <Link to='/profile'> profile </Link> */}
 
 
       </div>
